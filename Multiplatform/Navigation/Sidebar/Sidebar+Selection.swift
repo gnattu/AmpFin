@@ -29,11 +29,6 @@ internal extension Sidebar {
         case albumArtists
         case artists
         
-        case offlineTracks
-        case offlineAlbums
-        case offlineFavorites
-        case offlinePlaylists
-        
         // Special:
         case search
         case playlist(id: String)
@@ -74,10 +69,10 @@ internal extension Sidebar.DataProvider {
                 ]
             case .offline:
                 return [
-                    .offlineTracks,
-                    .offlineAlbums,
-                    .offlinePlaylists,
-                    .offlineFavorites,
+                    .tracks,
+                    .albums,
+                    .playlists,
+                    .favorites,
                 ]
         }
     }
@@ -88,13 +83,13 @@ internal extension Sidebar.DataProvider {
 internal extension Sidebar.Panel {
     var title: LocalizedStringKey? {
         switch self {
-            case .offlineTracks, .tracks:
+            case .tracks:
                 return "title.tracks"
-            case .offlineAlbums, .albums:
+            case .albums:
                 return "title.albums"
-            case .offlinePlaylists, .playlists:
+            case .playlists:
                 return "title.playlists"
-            case .offlineFavorites, .favorites:
+            case .favorites:
                 return "title.favorites"
             case .albumArtists:
                 return "title.albumArtists"
@@ -106,13 +101,13 @@ internal extension Sidebar.Panel {
     }
     var icon: String? {
         switch self {
-            case .offlineTracks, .tracks:
+            case .tracks:
                 return "music.note"
-            case .offlineAlbums, .albums:
+            case .albums:
                 return "square.stack"
-            case .offlinePlaylists, .playlists:
+            case .playlists:
                 return "music.note.list"
-            case .offlineFavorites, .favorites:
+            case .favorites:
                 return "heart"
             case .albumArtists:
                 return "music.mic"
@@ -126,13 +121,13 @@ internal extension Sidebar.Panel {
     @ViewBuilder
     var content: some View {
         switch self {
-            case .offlineTracks, .tracks:
+            case .tracks:
                 TracksView(favoritesOnly: false)
-            case .offlineAlbums, .albums:
+            case .albums:
                 AlbumsView()
-            case .offlinePlaylists, .playlists:
+            case .playlists:
                 PlaylistsView()
-            case .offlineFavorites, .favorites:
+            case .favorites:
                 TracksView(favoritesOnly: true)
             case .albumArtists:
                 ArtistsView(albumOnly: true)
