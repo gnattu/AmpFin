@@ -21,7 +21,7 @@ public final class JellyfinClient {
     public let clientBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "unknown"
     public let clientVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
     
-    #if os(iOS)
+    #if os(iOS) && !targetEnvironment(macCatalyst)
     public let deviceType = "iOS"
     #elseif os(macOS) || targetEnvironment(macCatalyst)
     public let deviceType = "macOS"
