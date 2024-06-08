@@ -13,11 +13,43 @@ internal struct Tabs: View {
     @Default(.activeTab) private var activeTab
     @Default(.searchTab) private var searchTab
     
+    @State private var search: String = ""
+    @State private var searchSelected = false
+    
+    @State private var searchPath = NavigationPath()
     @State private var libraryPath = NavigationPath()
     @State private var downloadsPath = NavigationPath()
     
+    private var selection: Binding<Selection> {
+        .init(get: { activeTab }, set: {
+            if activeTab == $0 {
+                switch activeTab {
+                    case .library:
+                        while !libraryPath.isEmpty {
+                            libraryPath.removeLast()
+                        }
+                    case .downloads:
+                        while !downloadsPath.isEmpty {
+                            downloadsPath.removeLast()
+                        }
+                    case .search:
+                        search = ""
+                        searchSelected = true
+                        
+                        print(searchPath)
+                        
+                        while !searchPath.isEmpty {
+                            searchPath.removeLast()
+                        }
+                }
+            }
+            
+            activeTab = $0
+        })
+    }
+    
     var body: some View {
-        TabView(selection: $activeTab) {
+        TabView(selection: selection) {
             Group {
                 // MARK: Library
                 
@@ -37,7 +69,7 @@ internal struct Tabs: View {
                 }
                 .tag(Selection.library)
                 .tabItem {
-                    Label("tab.libarary", systemImage: "rectangle.stack.fill")
+                    Label("tab.library", systemImage: "rectangle.stack.fill")
                 }
                 
                 // MARK: Downloads
@@ -62,8 +94,9 @@ internal struct Tabs: View {
                 
                 // MARK: Search
                 
-                NavigationStack {
-                    SearchView(searchTab: $searchTab)
+                NavigationStack(path: $searchPath) {
+                    SearchView(search: $search, searchTab: $searchTab, selected: $searchSelected)
+                        .modifier(Navigation.DestinationModifier())
                 }
                 .environment(\.libraryDataProvider, searchTab.dataProvider)
                 .tag(Selection.search)

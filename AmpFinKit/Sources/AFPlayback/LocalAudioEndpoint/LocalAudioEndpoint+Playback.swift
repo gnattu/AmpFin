@@ -8,6 +8,7 @@
 import Foundation
 import MediaPlayer
 import AVKit
+import Defaults
 import AFFoundation
 
 internal extension LocalAudioEndpoint {
@@ -21,8 +22,6 @@ internal extension LocalAudioEndpoint {
         var tracks = tracks
         unalteredQueue = tracks
         
-        repeatMode = .none
-        
         shuffled = shuffle
         if shuffle {
             tracks.shuffle()
@@ -32,7 +31,7 @@ internal extension LocalAudioEndpoint {
         queue = Array(tracks[startIndex + 1..<tracks.count])
         
         setNowPlaying(track: tracks[startIndex])
-        audioPlayer.replaceCurrentItem(with: avPlayerItem(track: nowPlaying!))
+        populateAVPlayerQueue()
         
         #if !os(macOS)
         AudioPlayer.setupAudioSession()
@@ -121,6 +120,7 @@ internal extension LocalAudioEndpoint {
         }
         set {
             _repeatMode = newValue
+            Defaults[.repeatMode] = newValue
         }
     }
     

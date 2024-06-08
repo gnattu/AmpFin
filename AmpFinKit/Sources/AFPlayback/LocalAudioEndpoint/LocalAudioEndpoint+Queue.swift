@@ -33,8 +33,16 @@ internal extension LocalAudioEndpoint {
         
         setNowPlaying(track: queue.removeFirst())
         
+        if !avPlayerQueue.isEmpty {
+            avPlayerQueue.removeFirst()
+        }
+        
         if let nowPlaying {
-            audioPlayer.replaceCurrentItem(with: avPlayerItem(track: nowPlaying))
+            if avPlayerQueue.first == nowPlaying.id {
+                audioPlayer.advanceToNextItem()
+            }
+            
+            populateAVPlayerQueue()
             playing = !queueWasEmpty || repeatMode != .none
         }
         
@@ -43,6 +51,50 @@ internal extension LocalAudioEndpoint {
         }
         
         setupNowPlayingMetadata()
+    }
+    
+    func populateAVPlayerQueue() {
+        guard let nowPlaying else {
+            return
+        }
+        
+        var tracks = [nowPlaying]
+        var startIndex = -1
+        
+        tracks += queue.prefix(4)
+        
+        for (index, track) in tracks.enumerated() {
+            guard avPlayerQueue.count > index else {
+                startIndex = index
+                break
+            }
+            
+            if avPlayerQueue[index] == track.id {
+                continue
+            }
+            
+            startIndex = index
+            break
+        }
+        
+        guard startIndex > -1 else {
+            return
+        }
+        
+        logger.info("AVQueuePlayer queue outdated after index \(startIndex) / \(self.avPlayerQueue.count)")
+        
+        for item in audioPlayer.items()[startIndex..<audioPlayer.items().count] {
+            audioPlayer.remove(item)
+        }
+        
+        while startIndex < avPlayerQueue.count {
+            avPlayerQueue.removeLast()
+        }
+        
+        for track in tracks[startIndex..<tracks.count] {
+            audioPlayer.insert(avPlayerItem(track: track), after: nil)
+            avPlayerQueue.append(track.id)
+        }
     }
 }
 
@@ -77,20 +129,20 @@ internal extension LocalAudioEndpoint {
         
         let previous = history.removeLast()
         setNowPlaying(track: previous)
-        audioPlayer.replaceCurrentItem(with: avPlayerItem(track: previous))
+        populateAVPlayerQueue()
         
         setupNowPlayingMetadata()
     }
     
     func skip(to: Int) {
-        if queue.count < to + 1 {
+        guard queue.count > to else {
             return
         }
         
-        let id = queue[to].id
-        while(nowPlaying?.id != id) {
-            advanceToNextTrack()
-        }
+        history.append(contentsOf: queue[0..<to])
+        queue.remove(atOffsets: IndexSet(0..<to))
+        
+        advanceToNextTrack()
     }
     
     // MARK: Updating
@@ -101,6 +153,7 @@ internal extension LocalAudioEndpoint {
         }
         
         queue.insert(track, at: index)
+        populateAVPlayerQueue()
     }
     func queueTracks(_ tracks: [Track], index: Int) {
         for (i, track) in tracks.enumerated() {
@@ -117,6 +170,8 @@ internal extension LocalAudioEndpoint {
         if let index = unalteredQueue.firstIndex(where: { $0.id == track.id }) {
             unalteredQueue.remove(at: index)
         }
+        
+        populateAVPlayerQueue()
         
         return track
     }
@@ -136,6 +191,8 @@ internal extension LocalAudioEndpoint {
                 queueTrack(track, index: to)
             }
         }
+        
+        populateAVPlayerQueue()
     }
     
     func restoreHistory(index: Int) {

@@ -8,17 +8,18 @@
 import Foundation
 import AVKit
 import OSLog
+import Defaults
 import AFFoundation
-import MediaPlayer
 
 @Observable
 internal final class LocalAudioEndpoint: AudioEndpoint {
-    let audioPlayer: AVPlayer
+    let audioPlayer: AVQueuePlayer
     
     var history: [Track]
     var nowPlaying: Track?
     var queue: [Track]
     
+    var avPlayerQueue: [String]
     var unalteredQueue: [Track]
     
     var nowPlayingInfo = [String: Any]()
@@ -30,10 +31,12 @@ internal final class LocalAudioEndpoint: AudioEndpoint {
     var _currentTime: Double = 0
     
     var _shuffled: Bool = false
-    var _repeatMode: RepeatMode = .none
+    var _repeatMode: RepeatMode = Defaults[.repeatMode]
     
     var buffering: Bool = false
     var duration: Double = 0
+    
+    var outputPort = AVAudioSession.sharedInstance().currentRoute.outputs.first?.portType ?? .builtInSpeaker
     
     // MARK: Util
     
@@ -41,6 +44,7 @@ internal final class LocalAudioEndpoint: AudioEndpoint {
     
     private init() {
         audioPlayer = .init()
+        audioPlayer.actionAtItemEnd = .pause
         audioPlayer.allowsExternalPlayback = false
         audioPlayer.usesExternalPlaybackWhileExternalScreenIsActive = true
         
@@ -48,6 +52,7 @@ internal final class LocalAudioEndpoint: AudioEndpoint {
         nowPlaying = nil
         queue = []
         
+        avPlayerQueue = []
         unalteredQueue = []
         
         setupTimeObserver()

@@ -108,7 +108,7 @@ extension AlbumView {
                             Button {
                                 album.favorite.toggle()
                             } label: {
-                                Label("favorite", systemImage: album.favorite ? "heart.fill" : "heart")
+                                Label("favorite", systemImage: album.favorite ? "star.fill" : "star")
                             }
                             
                             Button {
@@ -136,7 +136,7 @@ extension AlbumView {
                             if let first = album.artists.first {
                                 Divider()
                                 
-                                NavigationLink(destination: ArtistLoadView(artistId: first.id)) {
+                                NavigationLink(value: .artistLoadDestination(artistId: first.id)) {
                                     Label("artist.view", systemImage: "music.mic")
                                     Text(first.name)
                                 }

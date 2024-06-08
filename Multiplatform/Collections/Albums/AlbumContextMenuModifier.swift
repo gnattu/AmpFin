@@ -61,16 +61,16 @@ struct AlbumContextMenuModifier: ViewModifier {
                 Button {
                     album.favorite.toggle()
                 } label: {
-                    Label("favorite", systemImage: album.favorite ? "heart.fill" : "heart")
+                    Label("favorite", systemImage: album.favorite ? "star.fill" : "star")
                 }
                 
                 Divider()
                 
-                NavigationLink(destination: AlbumView(album: album)) {
+                NavigationLink(value: album) {
                     Label("album.view", systemImage: "square.stack")
                 }
                 if let first = album.artists.first {
-                    NavigationLink(destination: ArtistLoadView(artistId: first.id)) {
+                    NavigationLink(value: .artistLoadDestination(artistId: first.id)) {
                         Label("artist.view", systemImage: "music.mic")
                     }
                     .disabled(!dataProvider.supportsArtistLookup)

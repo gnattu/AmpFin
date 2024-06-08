@@ -19,8 +19,8 @@ internal extension LocalAudioEndpoint {
             // When current item is not even playing, checking buffering will cause false positives
             let buffering: Bool
             
-            if let playItem = audioPlayer.currentItem, _playing {
-                // We have to check buffer empty first becaue Apple thinks it is valid to have
+            if let playItem = audioPlayer.currentItem, playing {
+                // We have to check buffer empty first because Apple thinks it is valid to have
                 // isPlaybackBufferEmpty == true and isPlaybackBufferFull == true at the same time
                 if playItem.isPlaybackBufferEmpty {
                     buffering = true
@@ -78,6 +78,14 @@ internal extension LocalAudioEndpoint {
             }
         }
         #endif
+        
+        let _ = AVAudioSession.sharedInstance().publisher(for: \.outputVolume).sink {
+            self.volume = $0 * 100
+        }
+        
+        NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: nil) { _ in
+            self.outputPort = AVAudioSession.sharedInstance().currentRoute.outputs.first?.portType ?? .builtInSpeaker
+        }
         
         #if os(iOS)
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: .main) { [self] _ in

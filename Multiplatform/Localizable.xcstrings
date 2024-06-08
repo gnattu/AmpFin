@@ -27,6 +27,22 @@
         }
       }
     },
+    "account.app" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App"
+          }
+        }
+      }
+    },
     "account.deleteDownloads" : {
       "localizations" : {
         "de" : {
@@ -219,7 +235,7 @@
         }
       }
     },
-    "account.verson %@ %@" : {
+    "account.version.app %@ %@" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -231,6 +247,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "AmpFin %1$@ (%2$@)"
+          }
+        }
+      }
+    },
+    "account.version.database %@ %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenbank: %1$@ (%2$@)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Database: %1$@ (%2$@)"
           }
         }
       }
@@ -266,6 +298,9 @@
           }
         }
       }
+    },
+    "album.unknown" : {
+
     },
     "album.view" : {
       "localizations" : {
@@ -877,6 +912,38 @@
         }
       }
     },
+    "migrating" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenbank umziehen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Migrating database"
+          }
+        }
+      }
+    },
+    "migrating.description" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wegen eines Bugs in SwiftData muss die Datenbank umgezogen werden... Bitte habe einige Sekunden Geduld und halte AmpFin im Vordergrund geöffnet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A database migration is necessary due to a bug in SwiftData. Please wait a few seconds and keep AmpFin in the foreground."
+          }
+        }
+      }
+    },
     "more" : {
       "localizations" : {
         "de" : {
@@ -937,6 +1004,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Server unavailable"
+          }
+        }
+      }
+    },
+    "output" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgang"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Output"
           }
         }
       }
@@ -1991,6 +2074,22 @@
         }
       }
     },
+    "tab.library" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliothek"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Library"
+          }
+        }
+      }
+    },
     "tab.search" : {
       "localizations" : {
         "de" : {
@@ -2006,6 +2105,98 @@
           }
         }
       }
+    },
+    "table.album" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        }
+      }
+    },
+    "table.artist" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Künstler"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artist"
+          }
+        }
+      }
+    },
+    "table.duration" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Länge"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        }
+      }
+    },
+    "table.index" : {
+
+    },
+    "table.index %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "table.index %1$lld %2$lld"
+          }
+        }
+      }
+    },
+    "table.lufs" : {
+
+    },
+    "table.lufs %f" : {
+
+    },
+    "table.name" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "table.plays" : {
+
+    },
+    "table.plays %lld" : {
+
+    },
+    "table.released" : {
+
     },
     "tip.artistPlayback.message" : {
       "localizations" : {

@@ -132,6 +132,7 @@ extension NowPlaying {
                         .padding(.horizontal, 28)
                         .padding(.top, UIApplication.shared.connectedScenes.flatMap { ($0 as? UIWindowScene)?.windows ?? [] }.first { $0.isKeyWindow }?.safeAreaInsets.top)
                         .environment(\.colorScheme, .light)
+                        .persistentSystemOverlays(.hidden)
                         .onChange(of: currentTab) {
                             dragOffset = 0
                             
@@ -168,7 +169,7 @@ internal extension NowPlaying {
         private(set) var lastActive = Date()
         
         func setNowPlayingViewPresented(_ presented: Bool, completion: (() -> Void)? = nil) {
-            guard !active && lastActive.timeIntervalSince(Date()) <= -1 else {
+            guard !active || lastActive.timeIntervalSince(Date()) <= -1 else {
                 return
             }
             
@@ -178,6 +179,8 @@ internal extension NowPlaying {
             if presented {
                 containerPresented = true
             }
+            
+            UIApplication.shared.isIdleTimerDisabled = presented
             
             withAnimation(.spring(duration: 0.6, bounce: 0.1)) {
                 self.presented = presented

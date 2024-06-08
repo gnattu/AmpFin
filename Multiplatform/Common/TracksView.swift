@@ -12,6 +12,7 @@ import AFPlayback
 
 internal struct TracksView: View {
     @Environment(\.libraryDataProvider) private var dataProvider
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
     @Default(.sortOrder) private var sortOrder
     @Default(.sortAscending) private var sortAscending
@@ -34,24 +35,50 @@ internal struct TracksView: View {
         sortOrder.hashValue.description,
     ]}
     
+    private var compactLayout: Bool {
+        horizontalSizeClass == .compact
+    }
+    
     var body: some View {
         Group {
             if success {
-                List {
-                    TrackListButtons(startPlayback: startPlayback)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(.init(top: 0, leading: 0, bottom: 12, trailing: 0))
-                        .padding(.horizontal, 20)
-                    
-                    TrackList(tracks: tracks, container: nil, count: count) {
-                        loadTracks(reset: false)
+                Group {
+                    if compactLayout {
+                        List {
+                            TrackListButtons(startPlayback: startPlayback)
+                                .listRowSeparator(.hidden)
+                                .listRowInsets(.init(top: 0, leading: 0, bottom: 12, trailing: 0))
+                                .padding(.horizontal, 20)
+                            
+                            TrackList(tracks: tracks, container: nil, count: count) {
+                                loadTracks(reset: false)
+                            }
+                            .padding(.horizontal, 20)
+                        }
+                        .listStyle(.plain)
+                        .searchable(text: $search, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "search.tracks")
+                        .toolbar {
+                            SortSelector()
+                        }
+                    } else {
+                        TrackTable(tracks: tracks, container: nil, count: count) {
+                            loadTracks(reset: false)
+                        }
+                        .searchable(text: $search, placement: .toolbar, prompt: "search.tracks")
+                        .toolbar {
+                            Button(action: { startPlayback(shuffled: true) }) {
+                                Label("queue.play", systemImage: "play")
+                                    .symbolVariant(.circle)
+                            }
+                            
+                            Button(action: { startPlayback(shuffled: true) }) {
+                                Label("queue.shuffle", systemImage: "shuffle")
+                                    .symbolVariant(.circle)
+                            }
+                            
+                            SortSelector()
+                        }
                     }
-                    .padding(.horizontal, 20)
-                }
-                .listStyle(.plain)
-                .searchable(text: $search, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "search.tracks")
-                .toolbar {
-                    SortSelector()
                 }
             } else if failure {
                 ErrorView()
