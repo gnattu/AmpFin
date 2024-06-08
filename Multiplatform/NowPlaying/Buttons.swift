@@ -16,6 +16,10 @@ extension NowPlaying {
         
         @Binding var currentTab: Tab
         
+        #if targetEnvironment(macCatalyst)
+        @State private var airPlayView = AirPlayView()
+        #endif
+        
         private var compactLayout: Bool {
             horizontalSizeClass == .compact
         }
@@ -135,7 +139,11 @@ extension NowPlaying {
                     } else if horizontalSizeClass == .regular {
                         HStack(spacing: 4) {
                             Button {
+#if targetEnvironment(macCatalyst)
+                                airPlayView.showAirPlayMenu()
+#else
                                 AirPlay.shared.presentPicker()
+#endif
                             } label: {
                                 Label("output", systemImage: routeIcon)
                                     .labelStyle(.iconOnly)
@@ -152,6 +160,13 @@ extension NowPlaying {
                                     .id(AudioPlayer.current.outputPort)
                             }
                         }
+#if targetEnvironment(macCatalyst)
+                        .overlay {
+                            ZStack {
+                                airPlayView.frame(width: 44, height: 44).offset(x: 17.0, y: 304.0)
+                            }
+                        }
+#endif
                         
                         Spacer()
                         
@@ -233,4 +248,35 @@ private struct AirPlay {
     }
     
     static let shared = AirPlay()
+}
+
+private struct AirPlayView: UIViewRepresentable {
+    
+    private let routePickerView = AVRoutePickerView()
+
+    func makeUIView(context: UIViewRepresentableContext<AirPlayView>) -> UIView {
+        UIView()
+    }
+
+    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<AirPlayView>) {
+        routePickerView.isHidden = true
+        routePickerView.translatesAutoresizingMaskIntoConstraints = false
+        uiView.addSubview(routePickerView)
+
+        NSLayoutConstraint.activate([
+            routePickerView.topAnchor.constraint(equalTo: uiView.topAnchor),
+            routePickerView.leadingAnchor.constraint(equalTo: uiView.leadingAnchor),
+            routePickerView.bottomAnchor.constraint(equalTo: uiView.bottomAnchor),
+            routePickerView.trailingAnchor.constraint(equalTo: uiView.trailingAnchor)
+        ])
+    }
+    
+    func showAirPlayMenu() {
+        for view: UIView in routePickerView.subviews {
+            if let button = view as? UIButton {
+                button.sendActions(for: .touchUpInside)
+                break
+            }
+        }
+    }
 }
