@@ -39,7 +39,7 @@ extension NowPlaying {
                 case .HDMI, .displayPort:
                     "tv"
                 case .bluetoothLE, .bluetoothHFP, .bluetoothA2DP:
-                    "hifispeaker"
+                    "airpodspro"
                 case .headphones:
                     "headphones"
                 default:
