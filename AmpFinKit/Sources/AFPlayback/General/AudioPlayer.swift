@@ -55,7 +55,7 @@ public extension AudioPlayer {
         public let name: String
         
         public var showLabel: Bool {
-            port == .bluetoothLE || port == .bluetoothHFP || port == .bluetoothA2DP || port == .carAudio || port == .airPlay
+            port == .carAudio || port == .airPlay
         }
     }
 }
