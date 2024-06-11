@@ -47,6 +47,18 @@ internal extension LocalAudioEndpoint {
         }
         #endif
         
+    #if targetEnvironment(macCatalyst)
+        let url = JellyfinClient.shared.serverUrl.appending(path: "Audio").appending(path: track.id).appending(path: "universal").appending(queryItems: [
+            URLQueryItem(name: "api_key", value: JellyfinClient.shared.token),
+            URLQueryItem(name: "deviceId", value: JellyfinClient.shared.clientId),
+            URLQueryItem(name: "userId", value: JellyfinClient.shared.userId),
+            URLQueryItem(name: "container", value: "mp3,aac,m4a|aac,m4b|aac,flac,alac,m4a|alac,m4b|alac,webma,webm|webma,wav,aiff,aiff|aif"),
+            URLQueryItem(name: "startTimeTicks", value: "0"),
+            URLQueryItem(name: "audioCodec", value: "aac"),
+            URLQueryItem(name: "transcodingContainer", value: "aac"),
+            URLQueryItem(name: "transcodingProtocol", value: "http"),
+        ])
+    #else
         let url = JellyfinClient.shared.serverUrl.appending(path: "Audio").appending(path: track.id).appending(path: "universal").appending(queryItems: [
             URLQueryItem(name: "api_key", value: JellyfinClient.shared.token),
             URLQueryItem(name: "deviceId", value: JellyfinClient.shared.clientId),
@@ -57,6 +69,7 @@ internal extension LocalAudioEndpoint {
             URLQueryItem(name: "transcodingContainer", value: "mp4"),
             URLQueryItem(name: "transcodingProtocol", value: "hls"),
         ])
+    #endif
         
         return AVPlayerItem(url: url)
     }
